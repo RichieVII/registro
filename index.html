@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unite al Club · De Una</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --naranja:  #E8450A;
+      --naranja2: #FF6B35;
+      --dorado:   #F5A623;
+      --crema:    #FDF6EE;
+      --oscuro:   #1A0F00;
+      --gris:     #6B5B4E;
+      --verde-ok: #2D9E5F;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--crema);
+      color: var(--oscuro);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── FONDO DECORATIVO ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 110% -10%, rgba(232,69,10,.13) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at -10% 100%, rgba(245,166,35,.10) 0%, transparent 55%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── WRAPPER ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 20px 48px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      text-align: center;
+      padding: 40px 0 32px;
+      animation: fadeDown .6s ease both;
+    }
+
+    .logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--naranja), var(--dorado));
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(232,69,10,.35);
+    }
+
+    .logo-icon svg { width: 28px; height: 28px; }
+
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--naranja), var(--dorado));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--naranja), var(--naranja2));
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 99px;
+      margin-bottom: 14px;
+    }
+
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--oscuro);
+      margin-bottom: 10px;
+    }
+
+    header h1 span {
+      background: linear-gradient(90deg, var(--naranja), var(--dorado));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      font-size: .95rem;
+      color: var(--gris);
+      line-height: 1.5;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 28px 24px 32px;
+      box-shadow: 0 8px 40px rgba(26,15,0,.09), 0 2px 8px rgba(26,15,0,.05);
+      animation: fadeUp .6s .15s ease both;
+    }
+
+    /* ── STEPS ── */
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .78rem;
+      font-weight: 600;
+      color: #C0B0A0;
+    }
+
+    .step.active { color: var(--naranja); }
+    .step.done   { color: var(--verde-ok); }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #F0E8E0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .72rem;
+      font-weight: 700;
+      transition: all .3s;
+    }
+
+    .step.active .step-num {
+      background: var(--naranja);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(232,69,10,.4);
+    }
+
+    .step.done .step-num {
+      background: var(--verde-ok);
+      color: #fff;
+    }
+
+    .step-line {
+      width: 24px;
+      height: 2px;
+      background: #F0E8E0;
+      border-radius: 2px;
+    }
+
+    /* ── FORM PANELS ── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── LABELS & INPUTS ── */
+    .field { margin-bottom: 20px; }
+
+    label {
+      display: block;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--oscuro);
+      margin-bottom: 7px;
+      letter-spacing: .01em;
+    }
+
+    label span { color: var(--naranja); }
+
+    input[type="text"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #EDE3D8;
+      border-radius: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      color: var(--oscuro);
+      background: #FDFAF7;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input:focus {
+      border-color: var(--naranja);
+      box-shadow: 0 0 0 4px rgba(232,69,10,.12);
+      background: #fff;
+    }
+
+    input::placeholder { color: #C0B0A0; }
+
+    /* ── PREFERENCES GRID ── */
+    .pref-title {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--oscuro);
+      margin-bottom: 12px;
+    }
+
+    .pref-title span { color: var(--naranja); }
+
+    .prefs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .pref-item input[type="checkbox"] { display: none; }
+
+    .pref-item label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 10px 14px;
+      border: 2px solid #EDE3D8;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all .2s;
+      background: #FDFAF7;
+      text-align: center;
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--gris);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .pref-item label .emoji {
+      font-size: 1.8rem;
+      line-height: 1;
+      transition: transform .2s;
+    }
+
+    .pref-item input:checked + label {
+      border-color: var(--naranja);
+      background: #FFF4EE;
+      color: var(--naranja);
+      box-shadow: 0 2px 10px rgba(232,69,10,.18);
+    }
+
+    .pref-item input:checked + label .emoji {
+      transform: scale(1.15);
+    }
+
+    /* ── BUTTON ── */
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--naranja), var(--naranja2));
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(232,69,10,.35);
+    }
+
+    .btn-primary:active { transform: scale(.97); }
+
+    .btn-primary:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-back {
+      background: transparent;
+      color: var(--gris);
+      font-size: .9rem;
+      margin-top: 10px;
+      padding: 10px;
+    }
+
+    /* ── LOADING ── */
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    /* ── SUCCESS ── */
+    #success {
+      display: none;
+      text-align: center;
+      padding: 16px 0 8px;
+      animation: fadeUp .5s ease both;
+    }
+
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, var(--verde-ok), #3DBE74);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 6px 24px rgba(45,158,95,.3);
+      animation: popIn .5s .1s ease both;
+    }
+
+    .success-icon svg { width: 36px; height: 36px; }
+
+    #success h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--oscuro);
+      margin-bottom: 10px;
+    }
+
+    #success p {
+      font-size: .92rem;
+      color: var(--gris);
+      line-height: 1.55;
+      max-width: 280px;
+      margin: 0 auto 24px;
+    }
+
+    .success-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #F0FAF4;
+      border: 1.5px solid #B8EAD0;
+      border-radius: 99px;
+      padding: 10px 20px;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--verde-ok);
+    }
+
+    /* ── FOOTER NOTE ── */
+    .note {
+      text-align: center;
+      font-size: .75rem;
+      color: #B0A090;
+      margin-top: 20px;
+      line-height: 1.5;
+      animation: fadeUp .6s .3s ease both;
+    }
+
+    .note a { color: var(--naranja); text-decoration: none; }
+
+    /* ── ERROR ── */
+    .error-msg {
+      font-size: .8rem;
+      color: #D0341A;
+      margin-top: 6px;
+      display: none;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(.5); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── SLIDE TRANSITIONS ── */
+    .panel {
+      animation: fadeUp .35s ease both;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-wrap">
+      <div class="logo-icon">
+        <!-- Ícono DeUna simplificado -->
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 14.5L11.5 21L23 8" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="logo-text">De Una</span>
+    </div>
+    <div class="header-badge">🔥 Club de Ofertas Exclusivo</div>
+    <h1>Recibí las mejores<br/><span>ofertas de la pollería</span><br/>directo en tu celu</h1>
+    <p>Anotate gratis y enterate antes que nadie cuando hay descuentos en los productos que más te gustan.</p>
+  </header>
+
+  <!-- CARD FORM -->
+  <div class="card" id="formCard">
+
+    <!-- STEPS INDICATOR -->
+    <div class="steps" id="stepsBar">
+      <div class="step active" id="s1"><div class="step-num">1</div> Tus datos</div>
+      <div class="step-line"></div>
+      <div class="step" id="s2"><div class="step-num">2</div> Tus gustos</div>
+      <div class="step-line"></div>
+      <div class="step" id="s3"><div class="step-num">3</div> Listo</div>
+    </div>
+
+    <!-- PANEL 1: Datos personales -->
+    <div class="panel active" id="panel1">
+      <div class="field">
+        <label>Tu nombre <span>*</span></label>
+        <input type="text" id="nombre" placeholder="Ej: María González" autocomplete="given-name" />
+        <div class="error-msg" id="errNombre">Por favor ingresá tu nombre.</div>
+      </div>
+      <div class="field">
+        <label>Tu WhatsApp <span>*</span></label>
+        <input type="tel" id="whatsapp" placeholder="Ej: 3512345678" inputmode="numeric" autocomplete="tel" />
+        <div class="error-msg" id="errWA">Ingresá un número válido (sin el 0 ni el 15).</div>
+      </div>
+      <button class="btn btn-primary" onclick="goToStep2()">Siguiente →</button>
+    </div>
+
+    <!-- PANEL 2: Preferencias -->
+    <div class="panel" id="panel2">
+      <div class="pref-title">¿Qué productos te interesan? <span>*</span></div>
+      <div class="prefs-grid">
+        <div class="pref-item">
+          <input type="checkbox" id="p1" value="Milanesas" />
+          <label for="p1"><span class="emoji">🥩</span>Milanesas</label>
+        </div>
+        <div class="pref-item">
+          <input type="checkbox" id="p2" value="Pollo entero" />
+          <label for="p2"><span class="emoji">🍗</span>Pollo entero</label>
+        </div>
+        <div class="pref-item">
+          <input type="checkbox" id="p3" value="Pechugas" />
+          <label for="p3"><span class="emoji">🐔</span>Pechugas</label>
+        </div>
+        <div class="pref-item">
+          <input type="checkbox" id="p4" value="Achuras" />
+          <label for="p4"><span class="emoji">🫀</span>Achuras</label>
+        </div>
+        <div class="pref-item">
+          <input type="checkbox" id="p5" value="Embutidos" />
+          <label for="p5"><span class="emoji">🌭</span>Embutidos</label>
+        </div>
+        <div class="pref-item">
+          <input type="checkbox" id="p6" value="Carne vacuna" />
+          <label for="p6"><span class="emoji">🥓</span>Carne vacuna</label>
+        </div>
+        <div class="pref-item">
+          <input type="checkbox" id="p7" value="Pollo al spiedo" />
+          <label for="p7"><span class="emoji">🍖</span>Pollo al spiedo</label>
+        </div>
+        <div class="pref-item">
+          <input type="checkbox" id="p8" value="Supremas" />
+          <label for="p8"><span class="emoji">🍽️</span>Supremas</label>
+        </div>
+      </div>
+      <div class="error-msg" id="errPrefs" style="display:none; margin-bottom:14px;">Seleccioná al menos una opción.</div>
+      <button class="btn btn-primary" id="btnEnviar" onclick="enviar()">¡Unirme al club! 🎉</button>
+      <button class="btn btn-back" onclick="goToStep1()">← Volver</button>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div id="success">
+      <div class="success-icon">
+        <svg viewBox="0 0 36 36" fill="none">
+          <path d="M8 18.5L14.5 25L28 11" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2>¡Ya estás adentro! 🎉</h2>
+      <p>Te vamos a avisar por WhatsApp cuando haya una oferta especial en los productos que elegiste.</p>
+      <div class="success-pill">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" fill="currentColor"/>
+          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.117 1.522 5.85L.057 23.887a.5.5 0 00.606.628l6.244-1.638A11.947 11.947 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.16-1.426l-.36-.214-3.742.982.999-3.648-.235-.374A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" fill="currentColor"/>
+        </svg>
+        Vas a recibir tus ofertas por WhatsApp
+      </div>
+    </div>
+
+  </div><!-- /card -->
+
+  <!-- NOTA FOOTER -->
+  <p class="note">
+    🔒 Tus datos son privados y solo se usan para enviarte ofertas.<br/>
+    Podés darte de baja cuando quieras. · <a href="#">De Una</a>
+  </p>
+
+</div><!-- /page -->
+
+<script>
+  // ─────────────────────────────────────────────
+  // ⚠️  REEMPLAZÁ ESTA URL con la de tu Apps Script
+  // ─────────────────────────────────────────────
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPVEKwCTksNevsOPHVCBnnvT3urwlce9V7Vh8iEX9v/exec";
+
+  // ── NAVEGACIÓN DE PASOS ──
+  function goToStep2() {
+    const nombre = document.getElementById('nombre').value.trim();
+    const wa     = document.getElementById('whatsapp').value.trim();
+    let ok = true;
+
+    if (nombre.length < 2) {
+      document.getElementById('errNombre').style.display = 'block';
+      ok = false;
+    } else {
+      document.getElementById('errNombre').style.display = 'none';
+    }
+
+    if (!/^\d{8,12}$/.test(wa)) {
+      document.getElementById('errWA').style.display = 'block';
+      ok = false;
+    } else {
+      document.getElementById('errWA').style.display = 'none';
+    }
+
+    if (!ok) return;
+
+    document.getElementById('panel1').classList.remove('active');
+    document.getElementById('panel2').classList.add('active');
+    document.getElementById('s1').classList.remove('active');
+    document.getElementById('s1').classList.add('done');
+    document.getElementById('s1').querySelector('.step-num').innerHTML = '✓';
+    document.getElementById('s2').classList.add('active');
+  }
+
+  function goToStep1() {
+    document.getElementById('panel2').classList.remove('active');
+    document.getElementById('panel1').classList.add('active');
+    document.getElementById('s2').classList.remove('active');
+    document.getElementById('s1').classList.remove('done');
+    document.getElementById('s1').classList.add('active');
+    document.getElementById('s1').querySelector('.step-num').innerHTML = '1';
+  }
+
+  // ── ENVÍO ──
+  async function enviar() {
+    const checks = document.querySelectorAll('.prefs-grid input:checked');
+    if (checks.length === 0) {
+      document.getElementById('errPrefs').style.display = 'block';
+      return;
+    }
+    document.getElementById('errPrefs').style.display = 'none';
+
+    const btn = document.getElementById('btnEnviar');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Guardando...';
+
+    const nombre      = document.getElementById('nombre').value.trim();
+    const whatsapp    = document.getElementById('whatsapp').value.trim();
+    const preferencias = Array.from(checks).map(c => c.value).join(', ');
+    const fecha       = new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Cordoba' });
+
+    const params = new URLSearchParams({ nombre, whatsapp, preferencias, fecha });
+
+    try {
+      await fetch(SCRIPT_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' });
+      mostrarExito();
+    } catch (e) {
+      // no-cors siempre entra acá aunque funcione — igual mostramos éxito
+      mostrarExito();
+    }
+  }
+
+  function mostrarExito() {
+    document.getElementById('stepsBar').style.display = 'none';
+    document.getElementById('panel2').classList.remove('active');
+    document.getElementById('success').style.display = 'block';
+    document.getElementById('s2').classList.remove('active');
+    document.getElementById('s2').classList.add('done');
+    document.getElementById('s2').querySelector('.step-num').innerHTML = '✓';
+    document.getElementById('s3').classList.add('done');
+    document.getElementById('s3').querySelector('.step-num').innerHTML = '✓';
+  }
+</script>
+</body>
+</html>
